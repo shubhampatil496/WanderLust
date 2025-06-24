@@ -35,12 +35,18 @@ app.get("/listings", async (req,res) => {
     res.render("./listings/index.ejs", { allListings });
 });
 
+//New Route
+app.get("/listings/new", (req,res) => {
+    res.render("./listings/new.ejs");
+});
+
 //Show Route : Detailed Information About List
 app.get("/listings/:id", async (req,res) => {
     let { id } = req.params;
     const listingData = await listing.findById(id);
     res.render("./listings/show.ejs", {listingData});
 });
+
 
 // app.get("/testlisting", async(req,res) => {
 //     let sampleListing = new listing({
