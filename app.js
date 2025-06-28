@@ -6,6 +6,8 @@ const listing = require("./models/listing.js");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
+const ExpressError = require("./utils/ExpressError.js");
+
 
 main()
 .then(() => {
@@ -33,10 +35,10 @@ app.get("/", (req,res) => {
 });
 
 //Index Route : All List of posts
-app.get("/listings", async (req,res) => {
+app.get("/listings", wrapAsync(async (req,res) => {
     const allListings = await listing.find({});
     res.render("./listings/index.ejs", { allListings });
-});
+}));
 
 //New Route
 app.get("/listings/new", (req,res) => {
@@ -58,31 +60,31 @@ app.post("/listings", wrapAsync(async(req,res) => {
 }));
 
 //Edit Route : Edit listing
-app.get("/listings/:id/edit", async (req,res) => {
+app.get("/listings/:id/edit", wrapAsync(async (req,res) => {
     let {id} = req.params;
     const listingData = await listing.findById(id);
     res.render("./listings/edit.ejs", {listingData});
-});
+}));
 
-app.put("/listings/:id", async (req,res) => {
+app.put("/listings/:_id", wrapAsync(async (req,res) => {
     let {id} = req.params;
     await listing.findByIdAndUpdate(id,{...req.body.listing});
     res.redirect(`/listings/${id}`);
-});
+}));
 
 //Delete Route : Delete Listing
-app.delete("/listing/:id", async (req,res) => {
+app.delete("/listings/:_id", wrapAsync(async (req,res) => {
     let {id} = req.params;
     await listing.findByIdAndDelete(id);
     res.redirect("/listings");
-});
+}));
 
 //Show Route : Detailed Information About List
-app.get("/listings/:id", async (req,res) => {
+app.get("/listings/:id", wrapAsync(async (req,res) => {
     let { id } = req.params;
     const listingData = await listing.findById(id);
     res.render("./listings/show.ejs", {listingData});
-});
+}));
 
 
 // app.get("/testlisting", async(req,res) => {
@@ -98,8 +100,15 @@ app.get("/listings/:id", async (req,res) => {
 //   res.send("Successfull Testing");
 // });
 
-app.use((err,req,res,next) => {
-    res.send("Something Went Wrong");
+// Fallback route for all unmatched paths
+// app.all("*", (req, res, next) => {
+//     next(new ExpressError(404, "Page Not Found"));
+// });
+
+// Global error handler
+app.use((err, req, res, next) => {
+    const { status = 500, message = "Something went wrong!" } = err;
+    res.status(status).send(message);
 });
 
 app.listen(8080, () => {
