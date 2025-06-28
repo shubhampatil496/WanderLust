@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const listing = require("./models/listing.js");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-
+const wrapAsync = require("./utils/wrapAsync.js");
 
 main()
 .then(() => {
@@ -43,7 +43,7 @@ app.get("/listings/new", (req,res) => {
     res.render("./listings/new.ejs");
 });
 
-app.post("/listings", async(req,res) => {
+app.post("/listings", wrapAsync(async(req,res) => {
     const {title,description,image,price,location,country} = req.body;
     const listing1 = new listing({
         title:title,
@@ -55,7 +55,7 @@ app.post("/listings", async(req,res) => {
     });
     await listing1.save();
     res.redirect("/listings");
-});
+}));
 
 //Edit Route : Edit listing
 app.get("/listings/:id/edit", async (req,res) => {
@@ -98,7 +98,9 @@ app.get("/listings/:id", async (req,res) => {
 //   res.send("Successfull Testing");
 // });
 
-
+app.use((err,req,res,next) => {
+    res.send("Something Went Wrong");
+});
 
 app.listen(8080, () => {
     console.log("server is listening on port 8080");

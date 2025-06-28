@@ -8,10 +8,16 @@
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input type="text" name="title" placeholder="Enter Title" class="form-control" required>
+                <div class="invalid-feedback">
+                    Please provide a valid title.
+                </div>
         </div>
         <div class="mb-3">
             <label for="description">Description</label>
             <textarea class="form-control" name="description" placeholder="Enter Description" required></textarea>
+                <div class="invalid-feedback">
+                    Please provide a valid Description.
+                </div>
         </div>
         <div class="mb-3">
             <label for="image">Image</label>
@@ -20,16 +26,25 @@
      <div class="row">
            <div class="mb-3 col-md-4">
             <label for="price">Price</label>
-            <input type="number" name="price" placeholder="Enter Price" class="form-control" required>
+            <input  name="price" placeholder="Enter Price" class="form-control" required>
+                <div class="invalid-feedback">
+                    Enter Price.
+                </div>
         </div>
         <div class="mb-3 col-md-8">
             <label for="location">Location</label>
             <input type="text" name="location" placeholder="Enter location" class="form-control" required>
+                <div class="invalid-feedback">
+                    Please provide a valid Location.
+                </div>
         </div>
      </div>
         <div class="mb-3">
             <label for="country">Country</label>
             <input type="text" name="country" placeholder="Enter country" class="form-control" required>
+                <div class="invalid-feedback">
+                    Please provide a Country Name.
+                </div>
         </div><br>
             <button class="btn btn-dark add-btn">Add</button>
             <br>
