@@ -46,6 +46,9 @@ app.get("/listings/new", (req,res) => {
 });
 
 app.post("/listings", wrapAsync(async(req,res) => {
+      if(!req.body.listing){
+        throw new ExpressError(400, "Send valid data for listing");
+    }
     const {title,description,image,price,location,country} = req.body;
     const listing1 = new listing({
         title:title,
@@ -66,14 +69,17 @@ app.get("/listings/:id/edit", wrapAsync(async (req,res) => {
     res.render("./listings/edit.ejs", {listingData});
 }));
 
-app.put("/listings/:_id", wrapAsync(async (req,res) => {
-    let {id} = req.params;
+app.put("/listings/:id", wrapAsync(async (req,res) => {
+    if(!req.body.listing){
+        throw new ExpressError(400, "Send valid data for listing");
+    }
+    let { id } = req.params;
     await listing.findByIdAndUpdate(id,{...req.body.listing});
-    res.redirect(`/listings/${id}`);
+    res.redirect(`/listings/${ id }`);
 }));
 
 //Delete Route : Delete Listing
-app.delete("/listings/:_id", wrapAsync(async (req,res) => {
+app.delete("/listings/:id", wrapAsync(async (req,res) => {
     let {id} = req.params;
     await listing.findByIdAndDelete(id);
     res.redirect("/listings");
@@ -108,7 +114,7 @@ app.get("/listings/:id", wrapAsync(async (req,res) => {
 // Global error handler
 app.use((err, req, res, next) => {
     const { status = 500, message = "Something went wrong!" } = err;
-    res.status(status).send(message);
+    res.render("error.ejs",{message});
 });
 
 app.listen(8080, () => {

@@ -2,7 +2,8 @@
     font-family: "Plus jakarta", sans-serif !important;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+
+    min-height: 100%;
 }
 .container {
     flex: 1;
