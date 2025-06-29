@@ -7,6 +7,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
+const {listingSchema} = require("./schema.js");
 
 
 main()
@@ -34,8 +35,19 @@ app.get("/", (req,res) => {
     res.send("working");
 });
 
+//Schema Validation Using joi
+const schemaValidatior = (req,res,next) => {
+    let {error} = listingSchema.validate(req.body);
+    if(error){
+        let errmsg = error.details.map((el) => el.message).join(",");
+        throw new ExpressError(400, errmsg);
+    }else{
+        next();
+    }
+};
+
 //Index Route : All List of posts
-app.get("/listings", wrapAsync(async (req,res) => {
+app.get("/listings", schemaValidatior, wrapAsync(async (req,res) => {
     const allListings = await listing.find({});
     res.render("./listings/index.ejs", { allListings });
 }));
@@ -45,10 +57,7 @@ app.get("/listings/new", (req,res) => {
     res.render("./listings/new.ejs");
 });
 
-app.post("/listings", wrapAsync(async(req,res) => {
-      if(!req.body.listing){
-        throw new ExpressError(400, "Send valid data for listing");
-    }
+app.post("/listings", schemaValidatior, wrapAsync(async(req,res) => {
     const {title,description,image,price,location,country} = req.body;
     const listing1 = new listing({
         title:title,
@@ -63,13 +72,13 @@ app.post("/listings", wrapAsync(async(req,res) => {
 }));
 
 //Edit Route : Edit listing
-app.get("/listings/:id/edit", wrapAsync(async (req,res) => {
+app.get("/listings/:id/edit", schemaValidatior, wrapAsync(async (req,res) => {
     let {id} = req.params;
     const listingData = await listing.findById(id);
     res.render("./listings/edit.ejs", {listingData});
 }));
 
-app.put("/listings/:id", wrapAsync(async (req,res) => {
+app.put("/listings/:id", schemaValidatior, wrapAsync(async (req,res) => {
     if(!req.body.listing){
         throw new ExpressError(400, "Send valid data for listing");
     }
@@ -79,14 +88,14 @@ app.put("/listings/:id", wrapAsync(async (req,res) => {
 }));
 
 //Delete Route : Delete Listing
-app.delete("/listings/:id", wrapAsync(async (req,res) => {
+app.delete("/listings/:id", schemaValidatior, wrapAsync(async (req,res) => {
     let {id} = req.params;
     await listing.findByIdAndDelete(id);
     res.redirect("/listings");
 }));
 
 //Show Route : Detailed Information About List
-app.get("/listings/:id", wrapAsync(async (req,res) => {
+app.get("/listings/:id", schemaValidatior, wrapAsync(async (req,res) => {
     let { id } = req.params;
     const listingData = await listing.findById(id);
     res.render("./listings/show.ejs", {listingData});
