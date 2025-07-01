@@ -88,7 +88,7 @@ app.put("/listings/:id", schemaValidatior, wrapAsync(async (req,res) => {
 }));
 
 //Delete Route : Delete Listing
-app.delete("/listings/:id", schemaValidatior, wrapAsync(async (req,res) => {
+app.delete("/listings/:id", wrapAsync(async (req,res) => {
     let {id} = req.params;
     await listing.findByIdAndDelete(id);
     res.redirect("/listings");
