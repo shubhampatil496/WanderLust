@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Review = require("./Review.js");
 
 const listingSchema = new Schema({
   title: {
@@ -40,6 +41,12 @@ const listingSchema = new Schema({
       ref: "Review",
     },
   ],
+});
+
+listingSchema.post("findOneAndDelete", async (data) => {
+  if(data){
+  await Review.deleteMany({_id: { $in: data.reviews }});
+  }
 });
 
 const Listing = mongoose.model("Listing", listingSchema);

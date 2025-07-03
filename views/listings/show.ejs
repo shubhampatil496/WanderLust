@@ -6,7 +6,7 @@
                 <%= listingData.title %>
             </h3>
         </div>
-        <div class="card col-6 offset-3 show-card">
+        <div class="card col-6 offset-3 show-card listing-card">
             <img src=<%=listingData.image.url %> class="card-img-top show-img" alt="...">
             <div class="card-body">
                 <p class="card-text">
@@ -46,11 +46,20 @@
             <button class="btn btn-outline-dark">Submit</button>
         </form>
         <hr>
-        <h4>All Reviews : </h4>
-        <ul>
-           <% for(review of listingData.reviews) { %> 
-            <li><%= review.comment %>, <%= review.rating %></li>
+        <p><b>All Reviews</b></p>
+        <div class="row">
+         <% for(review of listingData.reviews) { %> 
+            <div class="card col-5 ms-3 mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Jon Doe</h5>
+                    <p class="card-text"><%= review.comment %></p>
+                    <p class="card-text"><%= review.rating %> stars</p>
+                </div>
+                <form action="/listings/<%= listingData.id %>/reviews/<%= review.id %>?_method=delete" method="post" class="mb-3 mt-2">
+                  <button class="btn btn-sm btn-dark">Delete</button>
+                </form>
+           </div>
            <% } %> 
-        </ul>
+        </div>
     </div>
 </div>
