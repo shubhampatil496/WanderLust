@@ -15,7 +15,7 @@ async function main() {
 };
 
 const initDb = async () => {
-    await listing.deleteMany({});
+    // await listing.deleteMany({});
     await listing.insertMany(initData.data);
     console.log("Data was initialized");
 };

@@ -65,28 +65,18 @@ app.get("/listings", schemaValidatior, wrapAsync(async (req,res) => {
     res.render("./listings/index.ejs", { allListings });
 }));
 
-//Show Route : Detailed Information About List
-app.get("/listings/:id", schemaValidatior, wrapAsync(async (req,res) => {
-    let { id } = req.params;
-    const listingData = await Listing.findById(id).populate("reviews");
-    res.render("./listings/show.ejs", {listingData});
-}));
+
 
 //New Route
 app.get("/listings/new", (req,res) => {
     res.render("./listings/new.ejs");
 });
 
+
+
 app.post("/listings", schemaValidatior, wrapAsync(async(req,res) => {
-    const {title,description,image,price,location,country} = req.body;
-    const listing1 = new Listing({
-        title:title,
-        description:description,
-        image:image,
-        price:price,
-        location:location,
-        country:country
-    });
+    
+    const listing1 = new listing(req.body.Listing);
     await listing1.save();
     res.redirect("/listings");
 }));
@@ -99,12 +89,19 @@ app.get("/listings/:id/edit", schemaValidatior, wrapAsync(async (req,res) => {
 }));
 
 app.put("/listings/:id", schemaValidatior, wrapAsync(async (req,res) => {
-    if(!req.body.listing){
+    if(!req.body.Listing){
         throw new ExpressError(400, "Send valid data for listing");
     }
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id,{...req.body.Listing});
     res.redirect(`/listings/${ id }`);
+}));
+
+//Show Route : Detailed Information About List
+app.get("/listings/:id", schemaValidatior, wrapAsync(async (req,res) => {
+    let { id } = req.params;
+    const listingData = await Listing.findById(id).populate("reviews");
+    res.render("./listings/show.ejs", {listingData});
 }));
 
 //Delete Route : Delete Listing
@@ -150,7 +147,7 @@ app.post("/listings/:id/reviews",reviewValidatior, wrapAsync(async (req,res) => 
 }));
 
 //Reviews Delete Route
-app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req,res) => {
+app.delete("/listings/:id/reviews/:reviewId",wrapAsync(async (req,res) => {
     let {id, reviewId} = req.params;
 
     await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
@@ -158,6 +155,8 @@ app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req,res) => {
     
     res.redirect(`/listings/${id}`);
 }))
+
+
 
 // Global error handler
 app.use((err, req, res, next) => {
