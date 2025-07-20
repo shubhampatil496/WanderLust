@@ -34,6 +34,10 @@ router.get("/new", (req,res) => {
 router.get("/:id", wrapAsync(async (req,res) => {
     let { id } = req.params;
     const listingData = await Listing.findById(id).populate("reviews");
+    if(!listingData){
+        req.flash("error", "Such Listing Does Not Exists");
+        res.redirect("/listings");
+    }
     res.render("./listings/show.ejs", {listingData});
 }));
 
