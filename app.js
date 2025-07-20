@@ -6,7 +6,8 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
-
+const session = require("express-session");
+const flash = require("connect-flash");
 
 main()
 .then(() => {
@@ -28,9 +29,34 @@ app.use(methodOverride("_method"));
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
+//Session Options : 
+const sessionOptions = {
+    secret : "mySecret",
+    resave : false,
+    saveUninitialized : true,
+    cookie : {
+        expires : Date.now() + 1000 * 60 * 60 * 24 * 3,
+        maxAge : 1000 * 60 * 60 * 24 * 3,
+        httpOnly : true
+    }
+};
+
 app.get("/", (req,res) => {
     res.send("HI I am Root");
 });
+
+//Use Sessions : 
+app.use(session(sessionOptions));
+//use Flash : 
+app.use(flash());
+
+//Create Flash : 
+app.use((req,res,next) => {
+    res.locals.success = req.flash("success");
+    // req.locals.delete = req.flash("delete");
+    next();
+});
+
 
 app.use("/listings", listings);
 app.use("/listings/:id/reviews",reviews);
