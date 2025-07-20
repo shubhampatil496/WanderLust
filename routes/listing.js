@@ -58,6 +58,7 @@ router.put("/:id", schemaValidatior, wrapAsync(async (req,res) => {
     }
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id,{...req.body.Listing});
+    req.flash("success", "Updated Successfully");
     res.redirect(`/listings/${ id }`);
 }));
 
@@ -67,7 +68,7 @@ router.put("/:id", schemaValidatior, wrapAsync(async (req,res) => {
 router.delete("/:id", wrapAsync(async (req,res) => {
     let {id} = req.params;
     await Listing.findByIdAndDelete(id);
-    // req.flash("delete", "Listing Deleted");
+    req.flash("success", "Listing Deleted");
     res.redirect("/listings");
 }));
 
