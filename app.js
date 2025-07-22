@@ -4,8 +4,9 @@ const path = require("path");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const listings = require("./routes/listing.js");
-const reviews = require("./routes/review.js");
+const listingsRouter = require("./routes/listing.js");
+const reviewsRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
@@ -77,8 +78,9 @@ app.use((req,res,next) => {
 });
 
 
-app.use("/listings", listings);
-app.use("/listings/:id/reviews",reviews);
+app.use("/listings", listingsRouter);
+app.use("/listings/:id/reviews",reviewsRouter);
+app.use("/", userRouter);
 
 
 // Global error handler
