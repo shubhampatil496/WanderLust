@@ -73,7 +73,7 @@ passport.deserializeUser(User.deserializeUser());
 //Create Flash : 
 app.use((req,res,next) => {
     res.locals.success = req.flash("success");
-    // res.locals.error = req.flash("error");
+    res.locals.error = req.flash("error");
     next();
 });
 
