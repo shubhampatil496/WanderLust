@@ -61,14 +61,14 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.get("/demouser", async (req,res) => {
-    let fakeUser = new User({
-        email:"student@gmail.com",
-        username:"myusername"
-    });
-    let registerUser = await User.register(fakeUser,"helloworld");
-    res.send(registerUser);
-});
+// app.get("/demouser", async (req,res) => {
+//     let fakeUser = new User({
+//         email:"student@gmail.com",
+//         username:"myusername"
+//     });
+//     let registerUser = await User.register(fakeUser,"helloworld");
+//     res.send(registerUser);
+// });
 
 //Create Flash : 
 app.use((req,res,next) => {
