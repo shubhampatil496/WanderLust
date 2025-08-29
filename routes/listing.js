@@ -5,6 +5,7 @@ const methodOverride = require("method-override");
 const wrapAsync = require("../utils/wrapAsync.js");
 const ExpressError = require("../utils/ExpressError.js");
 const {listingSchema} = require("../schema.js");
+const {isLoggedIn} = require("../middleware.js");
 
 //Schema Validation Using joi server, side validation 
 const schemaValidatior = (req,res,next) => {
@@ -26,7 +27,7 @@ router.get("/", wrapAsync(async (req,res) => {
 
 
 //New Route
-router.get("/new", (req,res) => {
+router.get("/new", isLoggedIn, (req,res) => {
     res.render("./listings/new.ejs");
 });
 
@@ -50,13 +51,13 @@ router.post("/", schemaValidatior, wrapAsync(async(req,res) => {
 }));
 
 //Edit Route : Edit listing
-router.get("/:id/edit", wrapAsync(async (req,res) => {
+router.get("/:id/edit",isLoggedIn, wrapAsync(async (req,res) => {
     let {id} = req.params;
     const listingData = await Listing.findById(id);
     res.render("./listings/edit.ejs", {listingData});
 }));
 
-router.put("/:id", schemaValidatior, wrapAsync(async (req,res) => {
+router.put("/:id",isLoggedIn, schemaValidatior, wrapAsync(async (req,res) => {
     if(!req.body.Listing){
         throw new ExpressError(400, "Send valid data for listing");
     }
@@ -69,7 +70,7 @@ router.put("/:id", schemaValidatior, wrapAsync(async (req,res) => {
 
 
 //Delete Route : Delete Listing
-router.delete("/:id", wrapAsync(async (req,res) => {
+router.delete("/:id",isLoggedIn, wrapAsync(async (req,res) => {
     let {id} = req.params;
     await Listing.findByIdAndDelete(id);
     req.flash("success", "Listing Deleted");
