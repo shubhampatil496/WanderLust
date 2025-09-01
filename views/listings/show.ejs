@@ -9,13 +9,11 @@
         <div class="card col-6 offset-3 show-card listing-card">
             <img src=<%=listingData.image.url %> class="card-img-top show-img" alt="...">
             <div class="card-body">
-                <p class="card-text">
-                    <br>
-                    <%= listingData.description %> <br>
-                    &#8377;<%= listingData.price.toLocaleString("en-IN") %> <br>
-                    <%= listingData.location %> <br>
-                    <%= listingData.country %> <br>
-                </p>
+                <p class="card-text">Owned By : <i><%= listingData.owner.username %></i></p>
+                    <p class="card-text"><%= listingData.description %></p> 
+                    <p class="card-text">&#8377;<%= listingData.price.toLocaleString("en-IN") %></p>
+                    <p class="card-text"><%= listingData.location %></p> 
+                    <p class="card-text"><%= listingData.country %></p> 
             </div>
         </div>
         <br>
