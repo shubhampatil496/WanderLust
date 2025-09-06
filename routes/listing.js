@@ -45,7 +45,7 @@ router.get("/:id", wrapAsync(async (req,res) => {
 //Create Route : Add new Listing
 router.post("/", schemaValidatior, wrapAsync(async(req,res) => {
     const listing1 = new Listing(req.body.Listing);
-    newListing.owner = req.user._id;
+    listing1.owner = req.user._id;
     await listing1.save();
     req.flash("success", "New Listing Created");
     res.redirect("/listings");
