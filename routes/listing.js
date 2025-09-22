@@ -6,6 +6,10 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const { isLoggedIn, isOwner, schemaValidatior } = require("../middleware.js");
 const listingController = require("../controllers/listings.js");
 
+//upload image (multer)
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+
 //Router.route = Chaining of all methods
 router
   .route("/")
