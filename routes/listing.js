@@ -16,11 +16,14 @@ router
   //Index Route : All List of posts
   .get(wrapAsync(listingController.index))
   //Create Route : Add new Listing
-  .post(
-    isLoggedIn,
-    schemaValidatior,
-    wrapAsync(listingController.createListing)
-  );
+  // .post(
+  //   isLoggedIn,
+  //   schemaValidatior,
+  //   wrapAsync(listingController.createListing)
+  // );
+  .post(upload.single('Listing[image]'), (req,res) => {
+    res.send(req.file);
+  });
 //End
 //New Route
 router.get("/new", isLoggedIn, listingController.renderNewForm);
