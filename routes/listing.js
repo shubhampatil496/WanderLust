@@ -8,7 +8,8 @@ const listingController = require("../controllers/listings.js");
 
 //upload image (multer)
 const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const {storage} = require("../cloudConfing.js")
+const upload = multer({ storage })
 
 //Router.route = Chaining of all methods
 router
@@ -16,14 +17,12 @@ router
   //Index Route : All List of posts
   .get(wrapAsync(listingController.index))
   //Create Route : Add new Listing
-  // .post(
-  //   isLoggedIn,
-  //   schemaValidatior,
-  //   wrapAsync(listingController.createListing)
-  // );
-  .post(upload.single('Listing[image]'), (req,res) => {
-    res.send(req.file);
-  });
+  .post(
+    isLoggedIn,
+    schemaValidatior,
+    upload.single('Listing[image]'),
+    wrapAsync(listingController.createListing)
+  );
 //End
 //New Route
 router.get("/new", isLoggedIn, listingController.renderNewForm);
@@ -36,6 +35,7 @@ router
   .put(
     isLoggedIn,
     isOwner,
+    upload.single('Listing[image]'),
     schemaValidatior,
     wrapAsync(listingController.updateListing)
   )
