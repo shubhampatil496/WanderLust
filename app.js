@@ -50,9 +50,6 @@ const sessionOptions = {
     }
 };
 
-app.get("/", (req,res) => {
-    res.send("HI I am Root");
-});
 
 //Use Sessions : 
 app.use(session(sessionOptions));
