@@ -18,6 +18,16 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
+
+const port = process.env.PORT || 8080;
+
+app.get("/", (req, res) => {
+    res.render("listing"); // homepage
+});
+
+
+
+
 const dbUrl=process.env.ATLASDB_URL;
 
 main()
@@ -107,6 +117,6 @@ app.use((err, req, res, next) => {
     res.render("error.ejs",{message});
 });
 
-app.listen(8080, () => {
-    console.log("server is listening on port 8080");
+app.listen(port, () => {
+    console.log(`Server is listening on port ${port}`);
 });
