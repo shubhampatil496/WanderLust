@@ -21,12 +21,6 @@ const User = require("./models/user.js");
 
 const port = process.env.PORT || 8080;
 
-app.get("/", (req, res) => {
-    res.render("listing"); // homepage
-});
-
-
-
 
 const dbUrl=process.env.ATLASDB_URL;
 
