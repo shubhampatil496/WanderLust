@@ -17,6 +17,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
+const dbUrl=process.env.ATLASDB_URL;
 
 main()
 .then(() => {
@@ -27,7 +28,7 @@ main()
 });
 
 async function main() {
-    mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
+    mongoose.connect(dbUrl);
 };
 
 app.set("view engine", "ejs");
