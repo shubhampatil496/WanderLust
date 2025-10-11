@@ -48,35 +48,6 @@ Uses MongoDB Atlas (Cloud Database) for storing user data, hostel details, and r
 
 Data is not stored locally — ensuring scalability and reliability.
 
-Wanderlust/
-│
-├── models/
-│   ├── listing.js
-│   └── review.js
-│
-├── routes/
-│   ├── listings.js
-│   ├── reviews.js
-│   └── users.js
-│
-├── views/
-│   ├── listings/
-│   │   ├── index.ejs
-│   │   ├── show.ejs
-│   │   ├── edit.ejs
-│   │   └── new.ejs
-│   ├── reviews/
-│   └── users/
-│
-├── public/
-│   ├── css/
-│   ├── js/
-│   └── images/
-│
-├── app.js
-├── package.json
-├── .env
-└── README.md
 
 git clone https://github.com/yourusername/wanderlust.git
 cd wanderlust
