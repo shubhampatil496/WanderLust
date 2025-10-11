@@ -2,10 +2,6 @@
   "engines": {
     "node": "22.14.0"
   },
-  "scripts": {
-  "start": "node app.js"
-},
-
   "name": "majorproject",
   "version": "1.0.0",
   "main": "index.js",
