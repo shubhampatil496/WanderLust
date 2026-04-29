@@ -1,7 +1,7 @@
-🏡 Wanderlust – Hostel Management System
+🏡 KumbhStay – Hostel Management System
 📖 Overview
 
-Wanderlust is a full-stack Hostel Management System built using Node.js, Express.js, MongoDB Atlas, and EJS templating.
+KumbhStay is a full-stack Hostel Management System built using Node.js, Express.js, MongoDB Atlas, and EJS templating.
 The project helps students and hostel owners list, manage, and explore hostels easily — similar to Airbnb, but designed for college hostels and budget accommodations.
 
 It includes features like authentication, reviews, and image uploads, all integrated into a clean and responsive interface.
@@ -49,8 +49,8 @@ Uses MongoDB Atlas (Cloud Database) for storing user data, hostel details, and r
 Data is not stored locally — ensuring scalability and reliability.
 
 
-git clone https://github.com/yourusername/wanderlust.git
-cd wanderlust
+git clone https://github.com/yourusername/kumbhstay.git
+cd kumbhstay
 
 npm install
 

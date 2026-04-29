@@ -24,6 +24,10 @@ const listingSchema = new Schema({
   country: {
     type: String,
   },
+  coordinates: {
+    lat: Number,
+    lng: Number,
+  },
   reviews: [
     {
       type: mongoose.Schema.Types.ObjectId,

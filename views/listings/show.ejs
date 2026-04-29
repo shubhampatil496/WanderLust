@@ -1,4 +1,6 @@
 <% layout("/layouts/boilerplate") %>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <br>
     <div class="row">
         <div class="col-8 offset-3">
@@ -26,6 +28,11 @@
             </div>
         </div>
         <br>
+
+        <div class="col-6 offset-3 mb-4">
+            <h5>Location on Map</h5>
+            <div id="listingMap" style="height: 22rem; border-radius: 0.8rem;"></div>
+        </div>
     </div>
 
     <% if(currUser && listingData.owner._id.equals(currUser._id)) { %>
@@ -98,3 +105,59 @@
 
             </div>
             </div>
+
+            <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+                integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+            <script>
+                (() => {
+                    const mapNode = document.getElementById("listingMap");
+                    if (!mapNode || typeof L === "undefined") return;
+
+                    const fullAddress = <%- JSON.stringify(`${listingData.location}, ${listingData.country}`) %>;
+                    const listingTitle = <%- JSON.stringify(listingData.title) %>;
+                    const savedLat = <%= listingData.coordinates && listingData.coordinates.lat != null ? Number(listingData.coordinates.lat) : "NaN" %>;
+                    const savedLng = <%= listingData.coordinates && listingData.coordinates.lng != null ? Number(listingData.coordinates.lng) : "NaN" %>;
+                    const hasSavedCoordinates = Number.isFinite(savedLat) && Number.isFinite(savedLng);
+                    const map = L.map("listingMap").setView(hasSavedCoordinates ? [savedLat, savedLng] : [20.5937, 78.9629], hasSavedCoordinates ? 13 : 4);
+
+                    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                        maxZoom: 19,
+                        attribution: "&copy; OpenStreetMap contributors",
+                    }).addTo(map);
+
+                    if (hasSavedCoordinates) {
+                        L.marker([savedLat, savedLng])
+                            .addTo(map)
+                            .bindPopup(`<b>${listingTitle}</b><br>${fullAddress}`)
+                            .openPopup();
+                        return;
+                    }
+
+                    fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(fullAddress)}`)
+                        .then((response) => response.json())
+                        .then((results) => {
+                            if (!Array.isArray(results) || results.length === 0) {
+                                L.popup()
+                                    .setLatLng([20.5937, 78.9629])
+                                    .setContent("Exact location not found for this listing.")
+                                    .openOn(map);
+                                return;
+                            }
+
+                            const latitude = Number(results[0].lat);
+                            const longitude = Number(results[0].lon);
+                            map.setView([latitude, longitude], 13);
+
+                            L.marker([latitude, longitude])
+                                .addTo(map)
+                                .bindPopup(`<b>${listingTitle}</b><br>${fullAddress}`)
+                                .openPopup();
+                        })
+                        .catch(() => {
+                            L.popup()
+                                .setLatLng([20.5937, 78.9629])
+                                .setContent("Unable to load location map right now.")
+                                .openOn(map);
+                        });
+                })();
+            </script>

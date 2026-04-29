@@ -1,4 +1,6 @@
 <% layout("/layouts/boilerplate") %>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <br> 
     <div class="row">
         <div class="col-8 offset-2">
@@ -39,7 +41,7 @@
         </div>
         <div class="mb-3 col-md-8">
             <label for="Listing[location]">Location</label>
-            <input type="text" name="Listing[location]" value="<%= listingData.location %>" class="form-control" required>
+            <input id="listingLocationInput" type="text" name="Listing[location]" value="<%= listingData.location %>" class="form-control" required>
              <div class="invalid-feedback">
                  Please Location.
             </div>
@@ -47,12 +49,39 @@
        </div>
         <div class="mb-3">
             <label for="Listing[country]">Country</label>
-            <input type="text" name="Listing[country]" value="<%= listingData.country %>" class="form-control" required>
+            <input id="listingCountryInput" type="text" name="Listing[country]" value="<%= listingData.country %>" class="form-control" required>
              <div class="invalid-feedback">
                  Please Enter Country.
             </div>
         </div>
+        <div class="mb-3">
+            <label for="mapSearchInput" class="form-label">Choose address from map</label>
+            <input id="mapSearchInput" type="text" class="form-control mb-2"
+                placeholder="Search like Google Maps (Press Enter)">
+            <div id="listingMapPicker" style="height: 23rem; border-radius: 0.8rem;"></div>
+            <small class="text-muted">Search any address and press Enter, or drag marker to exact location.</small>
+        </div>
+        <input id="listingLatInput" type="hidden" name="Listing[coordinates][lat]"
+            value="<%= listingData.coordinates && listingData.coordinates.lat != null ? listingData.coordinates.lat : '' %>">
+        <input id="listingLngInput" type="hidden" name="Listing[coordinates][lng]"
+            value="<%= listingData.coordinates && listingData.coordinates.lng != null ? listingData.coordinates.lng : '' %>">
         <button class="btn btn-dark edt-btn">Edit</button> <br><br>
     </form>
     </div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="/js/mapPicker.js"></script>
+<script>
+    initListingMapPicker({
+        mapId: "listingMapPicker",
+        searchInputId: "mapSearchInput",
+        locationInputId: "listingLocationInput",
+        countryInputId: "listingCountryInput",
+        latInputId: "listingLatInput",
+        lngInputId: "listingLngInput",
+        initialLat: <%= listingData.coordinates && listingData.coordinates.lat != null ? Number(listingData.coordinates.lat) : "NaN" %>,
+        initialLng: <%= listingData.coordinates && listingData.coordinates.lng != null ? Number(listingData.coordinates.lng) : "NaN" %>,
+    });
+</script>
     </div>

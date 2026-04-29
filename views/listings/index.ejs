@@ -67,6 +67,10 @@
    </div>
 </div> -->
 
+  <% if (searchQuery) { %>
+    <p class="mt-3 mb-2">Showing results for: <b><%= searchQuery %></b></p>
+  <% } %>
+
   <div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1 mt-3">
     <% for(let listing of allListings){ %>
         <a href="/listings/<%= listing.id %>" class="listing-link">
@@ -88,16 +92,24 @@
     <% } %>
   </div>
 
+  <% if (notFound) { %>
+    <p class="mt-3">Listing not found.</p>
+  <% } else if (allListings.length === 0) { %>
+    <p class="mt-3">No listings found. Try another search keyword.</p>
+  <% } %>
+
   <script>
     let taxSwitch = document.getElementById("switchCheckDefault");
-    taxSwitch.addEventListener("click", () => {
-      let taxInfo = document.getElementsByClassName("tax-info");
-      for(info of taxInfo){
-        if(info.style.display != "inline"){
-          info.style.display = "inline";
-        } else{
-          info.style.display = "none";
+    if (taxSwitch) {
+      taxSwitch.addEventListener("click", () => {
+        let taxInfo = document.getElementsByClassName("tax-info");
+        for(info of taxInfo){
+          if(info.style.display != "inline"){
+            info.style.display = "inline";
+          } else{
+            info.style.display = "none";
+          }
         }
-      }
-    })
+      })
+    }
   </script>

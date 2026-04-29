@@ -1,4 +1,37 @@
 <style>
+  .search-wrap {
+    position: relative;
+  }
+
+  .search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1200;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    margin-top: 0.25rem;
+    display: none;
+    max-height: 16rem;
+    overflow-y: auto;
+  }
+
+  .suggestion-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    border: none;
+    background: transparent;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.92rem;
+  }
+
+  .suggestion-item:hover {
+    background: #f5f5f5;
+  }
+
   .btn-search {
     background-color: #fe424d;
     color: #fff;
@@ -29,17 +62,18 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" href="/listings">WanderLust</a>
+        <a class="nav-link" href="/listings">KumbhStay</a>
       </div>
 
       <!-- search -->
       <div class="navbar-nav ms-auto">
         <nav class="navbar bg-body-tertiary">
-          <div class="container-fluid">
-             <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search Destinations" aria-label="Search"/>
+          <div class="container-fluid search-wrap">
+             <form class="d-flex" role="search" action="/listings" method="get" autocomplete="off">
+                <input id="searchInput" name="q" class="form-control me-2" type="search" placeholder="Search Destinations" aria-label="Search" value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"/>
                 <button class="btn btn-search" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
                </form>
+               <div id="searchSuggestions" class="search-suggestions"></div>
           </div>
         </nav>
       </div>
@@ -59,3 +93,74 @@
     </div>
   </div>
 </nav>
+
+<script>
+  (() => {
+    const input = document.getElementById("searchInput");
+    const suggestionBox = document.getElementById("searchSuggestions");
+
+    if (!input || !suggestionBox) return;
+
+    let debounceTimer;
+
+    const hideSuggestions = () => {
+      suggestionBox.style.display = "none";
+      suggestionBox.innerHTML = "";
+    };
+
+    input.addEventListener("input", () => {
+      clearTimeout(debounceTimer);
+      const value = input.value.trim();
+
+      if (!value) {
+        hideSuggestions();
+        return;
+      }
+
+      debounceTimer = setTimeout(async () => {
+        try {
+          const response = await fetch(`/listings/suggestions?q=${encodeURIComponent(value)}`);
+          const suggestions = await response.json();
+
+          if (!Array.isArray(suggestions) || suggestions.length === 0) {
+            hideSuggestions();
+            return;
+          }
+
+          suggestionBox.innerHTML = "";
+          suggestions.forEach((suggestion) => {
+            const label = `${suggestion.title} - ${suggestion.location}, ${suggestion.country}`;
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "suggestion-item";
+            button.dataset.value = label;
+            button.dataset.id = suggestion.id;
+            button.textContent = label;
+            suggestionBox.appendChild(button);
+          });
+
+          suggestionBox.style.display = "block";
+        } catch (err) {
+          hideSuggestions();
+        }
+      }, 250);
+    });
+
+    suggestionBox.addEventListener("click", (event) => {
+      const target = event.target.closest(".suggestion-item");
+      if (!target) return;
+      if (target.dataset.id) {
+        window.location.href = `/listings/${target.dataset.id}`;
+        return;
+      }
+      input.value = target.dataset.value || target.innerText;
+      input.form.submit();
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!event.target.closest(".search-wrap")) {
+        hideSuggestions();
+      }
+    });
+  })();
+</script>
