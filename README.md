@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 🏡 KumbhStay – Hostel Management System
 📖 Overview
 
 KumbhStay is a full-stack Hostel Management System built using Node.js, Express.js, MongoDB Atlas, and EJS templating.
+=======
+🏡 KumbhStay – PG Listing Platform
+📖 Overview
+
+KumbhStay is a full-stack PG listing platfrom built using Node.js, Express.js, MongoDB Atlas, and EJS templating.
+>>>>>>> ff63202c2a9e35a8516ff73ee2129d5537d44751
 The project helps students and hostel owners list, manage, and explore hostels easily — similar to Airbnb, but designed for college hostels and budget accommodations.
 
 It includes features like authentication, reviews, and image uploads, all integrated into a clean and responsive interface.
